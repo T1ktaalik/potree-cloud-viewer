@@ -7,4 +7,7 @@ import PotreeViewer from './components/PotreeViewer.vue'
     <PotreeViewer />
   </div>
 </template>
+<style>
+/* @import'tailwindcss';
+ */</style>
 

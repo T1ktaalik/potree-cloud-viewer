@@ -77,6 +77,24 @@ onMounted(() => {
       })
       
       console.log('Potree viewer initialized successfully')
+      // Load point cloud
+      try {
+        // @ts-ignore
+        const pointcloud = await Potree.loadPointCloud(
+          'https://storage.yandexcloud.net/pointclouds.nova-engineering.pro/mars_melnitsa/cloud.js',
+          'pointcloud'
+        )
+        
+        // Add point cloud to scene
+        viewer.scene.addPointCloud(pointcloud.pointcloud)
+        
+        // Fit camera to point cloud
+        viewer.fitToScreen()
+        
+        console.log('Point cloud loaded successfully')
+      } catch (error) {
+        console.error('Failed to load point cloud:', error)
+      }
     } catch (error) {
       console.error('Failed to initialize Potree:', error)
     }
