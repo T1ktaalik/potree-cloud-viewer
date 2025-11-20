@@ -80442,14 +80442,15 @@ ENDSEC
 
 			let languages = [
 				["EN", "en"],
-				["FR", "fr"],
+			/* 	["FR", "fr"],
 				["DE", "de"],
 				["JP", "jp"],
 				["ES", "es"],
-				["SE", "se"],
+				["SE", "se"], */
 				["ZH", "zh"],
 				["IT", "it"],
-				["CA", "ca"]
+				["RU", "ru"],
+			/* 	["CA", "ca"] */
 			];
 
 			let elLanguages = $('#potree_languages');

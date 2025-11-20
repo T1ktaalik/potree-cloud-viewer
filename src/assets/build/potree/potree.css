@@ -134,9 +134,9 @@
 #potree_quick_buttons{
 	position: absolute;
 	left: 4px;
-	top: 4px; 
-	width: 10px; 
-	height: 10px; 
+	top: 4px;
+	width: 40px;
+	height: 40px;
 	z-index: 10000;
 	float: left;
 }
@@ -792,4 +792,29 @@ body{
 	font-weight: bold;
 	padding-top: 0.6em;
 	padding-bottom: 0.1em;
+}
+#menu_about {
+	display: none !important;
+}
+
+#potree_menu > div:nth-child(10) {
+	display: none !important;
+}
+#menu_filters {
+	display: none !important;
+}
+
+#potree_languages > * {
+	cursor: pointer;
+	background-color: var(--bg-light-color);
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+	padding: 4px 8px;
+	margin: 2px;
+	display: inline-block;
+	transition: background-color 0.3s;
+}
+
+#potree_languages > *:hover {
+	background-color: var(--bg-hover-color);
 }

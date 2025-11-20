@@ -793,3 +793,10 @@ body{
 	padding-top: 0.6em;
 	padding-bottom: 0.1em;
 }
+#menu_about {
+	display: none !important;
+}
+
+#potree_menu > div:nth-child(10) {
+	display: none !important;
+}
