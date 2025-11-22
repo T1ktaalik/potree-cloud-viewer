@@ -4,6 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
+  base: 'https://storage.yandexcloud.net/pointclouds.nova-engineering.pro/',
   plugins: [vue(), tailwindcss()],
 })

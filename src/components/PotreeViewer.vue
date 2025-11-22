@@ -1,6 +1,6 @@
 <template>
   <div class="potree_container">
-    <div class="url-input-container fixed bottom-4 left-4 bg-white/90 rounded-lg shadow-md p-3 flex flex-col gap-2 w-80 max-w-[calc(100vw-2rem)]">
+    <div class="url-input-container fixed bottom-4 left-4 bg-white/90 rounded-lg shadow-md p-3 flex gap-2 w-80 max-w-[calc(100vw-2rem)]">
       <input
         v-model="pointCloudUrl"
         placeholder="Вставьте ссылку на облако точек"
@@ -29,19 +29,15 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 
-// Declare global function
+32 | // Declare global objects
 declare global {
   interface Window {
+    $: any;
+    jQuery: any;
+    Potree: any;
     loadPointCloudFromUrl: (url: string) => Promise<void>;
   }
 }
-
-// Import CSS dependencies
-import '/src/assets/potree/potree.css'
-import '/src/assets/libs/jquery-ui/jquery-ui.min.css'
-import '/src/assets/libs/openlayers3/ol.css'
-import '/src/assets/libs/spectrum/spectrum.css'
-import '/src/assets/libs/jstree/themes/mixed/style.css'
 
 const pointCloudUrl = ref('')
 let viewerInstance: any = null
@@ -162,34 +158,35 @@ onMounted(() => {
   // Load Potree dependencies and initialize viewer
   const initPotree = async () => {
     try {
-      // Create script elements for dependencies
-      const loadScript = (src: string) => {
-        return new Promise((resolve, reject) => {
-          const script = document.createElement('script')
-          script.src = src
-          script.onload = resolve
-          script.onerror = reject
-          document.head.appendChild(script)
-        })
-      }
-      
       // Load jQuery and UI dependencies first
-      await loadScript('/src/assets/libs/jquery/jquery-3.1.1.min.js')
-      await loadScript('/src/assets/libs/jquery-ui/jquery-ui.min.js')
-      await loadScript('/src/assets/libs/spectrum/spectrum.js')
+      // Load jQuery and UI dependencies first
+      // @ts-ignore
+      await import('/libs/jquery/jquery-3.1.1.min.js')
+      // @ts-ignore
+      await import('/libs/jquery-ui/jquery-ui.min.js')
+      // @ts-ignore
+176 |       await import('/libs/spectrum/spectrum.js')
+      
       
       // Load other dependencies
-      await loadScript('/src/assets/libs/other/BinaryHeap.js')
-      await loadScript('/src/assets/libs/tween/tween.min.js')
-      await loadScript('/src/assets/libs/d3/d3.js')
-      await loadScript('/src/assets/libs/proj4/proj4.js')
-      await loadScript('/src/assets/libs/openlayers3/ol.js')
-      await loadScript('/src/assets/libs/i18next/i18next.js')
-      await loadScript('/src/assets/libs/jstree/jstree.js')
+      // @ts-ignore
+      await import('/libs/other/BinaryHeap.js')
+      // @ts-ignore
+      await import('/libs/tween/tween.min.js')
+      // @ts-ignore
+      await import('/libs/d3/d3.js')
+      // @ts-ignore
+      await import('/libs/proj4/proj4.js')
+      // @ts-ignore
+      await import('/libs/openlayers3/ol.js')
+      // @ts-ignore
+      await import('/libs/i18next/i18next.js')
+      // @ts-ignore
+192 |       await import('/libs/jstree/jstree.js')
       
       // Load Potree
-      await loadScript('/src/assets/potree/potree.js')
-      
+      // @ts-ignore
+196 |       await import('/potree/potree.js')
       // @ts-ignore
       const Potree = window.Potree
       
@@ -248,6 +245,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@import '/potree/potree.css';
+@import '/libs/jquery-ui/jquery-ui.min.css';
+@import '/libs/openlayers3/ol.css';
+@import '/libs/spectrum/spectrum.css';
+@import '/libs/jstree/themes/mixed/style.css';
+
 .potree_container {
   position: absolute;
   width: 100%;
@@ -258,81 +261,95 @@ onMounted(() => {
 }
 
 .url-input-container {
-  position: absolute;
-  top: 20px;
+  position: fixed;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10; /* Reduced z-index to prevent covering menu toggle */
+  z-index: 10;
   display: flex;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.0);
-  
-  /* Responsive design for smaller screens */
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: center;
-  width: 90%;
-  max-width: 600px;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  width: auto;
+  max-width: calc(100vw - 2rem);
+  min-width: 25rem;
+}
+
+@media (min-width: 768px) {
+  .url-input-container {
+    flex-direction: row;
+    min-width: 35rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1140px) {
+  .url-input-container {
+    min-width: 35rem;
+  }
+  
+  .url-input {
+    flex: 2;
+  }
+}
+
+@media (min-width: 1140px) {
+  .url-input-container {
+    min-width: 40rem;
+  }
 }
 
 /* Move to bottom for narrow screens */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .url-input-container {
-    top: auto;
-    bottom: 10px;
-    left: 10px;
-    transform: none;
-    width: calc(100% - 20px);
-    max-width: none;
-    padding: 5px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
   
   .url-input {
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 0;
   }
   
   .load-button, .copy-button {
     width: 100%;
-    margin-bottom: 3px;
+    margin-bottom: 0;
   }
 }
 
 .url-input {
-  padding: 8px;
+  padding: 0.5rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  min-width: 200px;
+  border-radius: 0.25rem;
   flex: 1;
-  
-  /* Responsive design */
-  min-width: 150px;
+  font-size: 0.875rem;
+  min-width: 0;
 }
 
 .load-button, .copy-button {
-  padding: 8px 16px;
-  background: orange;
+  padding: 0.5rem 1rem;
+  background: #f97316;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.875rem;
   text-transform: uppercase;
   white-space: nowrap;
-  
-  /* Responsive design */
   flex: 1;
-  min-width: 120px;
+  min-width: max-content;
 }
 
 .load-button:hover, .copy-button:hover {
-  background: #ff8c00;
+  background: #ea580c;
 }
 
 .load-button:disabled, .copy-button:disabled {
@@ -343,40 +360,35 @@ onMounted(() => {
 /* Responsive design for small screens */
 @media (max-width: 768px) {
   .url-input-container {
-    top: 10px;
-    width: 95%;
-    padding: 8px;
+    width: calc(100vw - 2rem);
+    padding: 0.5rem;
   }
   
   .url-input {
-    padding: 6px;
-    min-width: 120px;
-    font-size: 14px;
+    padding: 0.5rem;
+    font-size: 0.875rem;
   }
   
   .load-button, .copy-button {
-    padding: 6px 12px;
-    font-size: 12px;
-    min-width: 100px;
+    padding: 0.5rem;
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .url-input-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    padding: 6px;
+    width: calc(100vw - 2rem);
+    padding: 0.5rem;
   }
   
   .url-input {
-    width: 100%;
-    min-width: auto;
+    padding: 0.5rem;
+    font-size: 0.875rem;
   }
   
   .load-button, .copy-button {
-    width: 100%;
-    min-width: auto;
+    padding: 0.5rem;
+    font-size: 0.75rem;
   }
 }
 
@@ -388,10 +400,21 @@ onMounted(() => {
   right: 0px;
   overflow: hidden;
   z-index: 1;
-  background-image: url('/src/assets/build/potree/resources/images/background.jpg');
+  background-image: url('/potree/resources/images/background.jpg');
+  height: 100vh !important;
+  width: 100vw !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
   
   /* Responsive design */
   transition: all 0.3s ease;
+}
+
+#potree_render_area > canvas {
+  height: 100vh !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
 #potree_sidebar_container {
@@ -426,6 +449,11 @@ onMounted(() => {
   
   #potree_render_area {
     height: 60%;
+  }
+  
+  #potree_render_area > canvas {
+    height: 100vh !important;
+    width: 100% !important;
   }
 }
 </style>
